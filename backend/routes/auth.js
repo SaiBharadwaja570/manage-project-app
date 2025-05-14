@@ -1,10 +1,12 @@
-const express = require('express');
+import express from 'express';
+import { signup, login, getCurrentUser, firebaseLogin } from '../controllers/authController.js';
+import { authenticate } from '../middlewares/auth.js';
+
 const router = express.Router();
-const { signup, login, getCurrentUser } = require('../controllers/authController');
-const { verifyJWT } = require('../utils/jwt.js');
 
 router.post('/signup', signup);
 router.post('/login', login);
-router.get('/me', verifyJWT, getCurrentUser);
+router.get('/me', authenticate, getCurrentUser);
+router.post('/firebase-login', firebaseLogin);
 
-module.exports = router;
+export default router;

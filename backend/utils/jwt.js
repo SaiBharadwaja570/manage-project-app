@@ -1,6 +1,6 @@
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
 
-exports.verifyJWT = (req, res, next) => {
+export const verifyJWT = (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (!authHeader)
     return res.status(401).json({ message: 'Missing auth header' });
