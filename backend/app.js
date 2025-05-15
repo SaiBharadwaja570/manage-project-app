@@ -2,7 +2,10 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import authRoutes from './routes/auth.js';
+import authRoutes from './routes/auth.routes.js';
+import projectRoutes from './routes/project.routes.js'
+import tasksRoutes from './routes/tasks.routes.js'
+import automationRoutes from './routes/automation.routes.js'
 
 dotenv.config();
 
@@ -19,5 +22,8 @@ mongoose.connect(process.env.MONGO_URI)
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/project', projectRoutes);
+app.use('/api/automation', automationRoutes);
+app.use('/api/tasks', tasksRoutes);
 
 export default app;
