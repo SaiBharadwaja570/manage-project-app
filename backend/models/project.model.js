@@ -1,12 +1,23 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
-const ProjectSchema = new mongoose.Schema({
-  title: { type: String, required: true },
-  description: { type: String },
-  owner: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  members: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // invited users
-  createdAt: { type: Date, default: Date.now },
+const projectSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+  },
+  description: String,
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',  // reference User model
+    required: true,
+  },
+  members: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',  // array of users
+    required: true,
+  }],
+}, {
+  timestamps: true
 });
 
-const Project = mongoose.model("Project", ProjectSchema);
-export default Project;
+export default mongoose.model('Project', projectSchema);

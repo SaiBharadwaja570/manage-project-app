@@ -12,7 +12,13 @@ export const createProject = async (req, res) => {
       owner: ownerId,
       members: [ownerId],
     });
-    res.status(201).json(project);
+
+    // Populate owner and members info before sending response
+    const populatedProject = await Project.findById(project._id)
+      .populate('owner', 'name email')
+      .populate('members', 'name email');
+
+    res.status(201).json(populatedProject);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -21,7 +27,10 @@ export const createProject = async (req, res) => {
 export const getProjects = async (req, res) => {
   try {
     const userId = req.user.id;
-    const projects = await Project.find({ members: userId });
+    const projects = await Project.find({ members: userId })
+      .populate('owner', 'name email')
+      .populate('members', 'name email');
+
     res.json(projects);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -62,7 +71,7 @@ export const updateProject = async (req, res) => {
     const project = await Project.findById(projectId);
     if (!project) return res.status(404).json({ error: 'Project not found' });
 
-    if (!project.members.includes(req.user.id)) {
+    if (!project.members.some(member => member.toString() === req.user.id)) {
       return res.status(403).json({ error: 'Access denied' });
     }
 
@@ -70,7 +79,13 @@ export const updateProject = async (req, res) => {
     if (description) project.description = description;
 
     await project.save();
-    res.json(project);
+
+    // Return updated project with populated user details
+    const updatedProject = await Project.findById(projectId)
+      .populate('owner', 'name email')
+      .populate('members', 'name email');
+
+    res.json(updatedProject);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
