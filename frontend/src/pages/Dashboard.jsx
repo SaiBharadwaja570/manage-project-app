@@ -1,11 +1,11 @@
-import React from 'react'
+// src/pages/Dashboard.jsx
+import React from 'react';
 
-const Dashboard = () => {
+export default function Dashboard({ user }) {
   return (
-    <div className="h-screen flex justify-center items-center bg-background">
-        <h1 className="text-3xl font-bold text-primary">Dashboarde</h1>
+    <div className="max-w-4xl mx-auto mt-20 p-6">
+      <h1 className="text-3xl font-bold text-blue-600 mb-6">Welcome, {user.displayName || user.email}!</h1>
+      <p>Your dashboard content here.</p>
     </div>
-  )
+  );
 }
-
-export default Dashboard

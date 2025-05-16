@@ -1,7 +1,7 @@
 // utils/automationRunner.js
 
 import Automation from '../models/automation.model.js';
-import Task from '../models/task.model.js';
+import Task from '../models/tasks.model.js';
 import User from '../models/user.model.js';
 
 /**

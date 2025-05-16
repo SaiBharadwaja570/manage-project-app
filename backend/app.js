@@ -13,7 +13,10 @@ const app = express();
 
 // Middleware -- comes in-between req and res
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials: true
+}));
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGO_URI)
