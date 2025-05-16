@@ -6,14 +6,12 @@ export const createProject = async (req, res) => {
     const { title, description } = req.body;
     const ownerId = req.user.id;
 
-    const project = new Project({
+    const project = await Project.create({
       title,
       description,
       owner: ownerId,
       members: [ownerId],
     });
-
-    await project.save();
     res.status(201).json(project);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -45,7 +43,7 @@ export const inviteUser = async (req, res) => {
     const userToInvite = await User.findOne({ email });
     if (!userToInvite) return res.status(404).json({ error: 'User not found' });
 
-    if (!project.members.includes(userToInvite._id)) {
+    if (!project.members.some(id => id.toString() === userToInvite._id.toString())) {
       project.members.push(userToInvite._id);
       await project.save();
     }

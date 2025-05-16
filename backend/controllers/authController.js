@@ -1,6 +1,7 @@
 
 const login = (req, res) => {
     const user = req.user;
+    if (!req.user) return res.status(401).json({ message: 'Unauthorized' });
     res.json({
       message: 'Login successful',
       user: {
@@ -14,6 +15,8 @@ const login = (req, res) => {
 
 const currUser = (req, res) => {
   const user = req.user;
+  if (!req.user) return res.status(401).json({ message: 'Unauthorized' });
+
     res.json({
       message: 'Fetched current user',
       user: {
