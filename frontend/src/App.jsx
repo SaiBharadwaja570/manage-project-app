@@ -1,43 +1,41 @@
-// src/App.jsx
-import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import PrivateRoute from './components/PrivateRoute';
+import ErrorBoundary from './services/ErrorBoundry';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
-import { getUserInfo } from './services/api';
+import Projects from './pages/Projects';
+import ProjectDetails from './pages/ProjectDetails';
+import Automation from './pages/Automation';
+import NotFound from './pages/NotFound';
+import './App.css';
 
-export default function App() {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function checkUser() {
-      const userData = await getUserInfo();
-      setUser(userData);
-      setLoading(false);
-    }
-    checkUser();
-  }, []);
-
-  if (loading) return <div className="text-center mt-20">Loading...</div>;
-
+function App() {
   return (
     <Router>
-      <Routes>
-        <Route
-          path="/login"
-          element={!user ? <Login setUser={setUser} /> : <Navigate to="/dashboard" replace />}
-        />
-        <Route
-          path="/register"
-          element={!user ? <Register setUser={setUser} /> : <Navigate to="/dashboard" replace />}
-        />
-        <Route
-          path="/dashboard"
-          element={user ? <Dashboard user={user} /> : <Navigate to="/login" replace />}
-        />
-        <Route path="*" element={<Navigate to={user ? "/dashboard" : "/login"} replace />} />
-      </Routes>
+      <AuthProvider>
+        <ErrorBoundary>
+          <Routes>
+            {/* Public routes */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+
+            {/* Protected routes */}
+            <Route element={<PrivateRoute />}>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/projects" element={<Projects />} />
+              <Route path="/projects/:id" element={<ProjectDetails />} />
+              <Route path="/projects/:id/automation" element={<Automation />} />
+            </Route>
+
+            {/* Fallback route */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </ErrorBoundary>
+      </AuthProvider>
     </Router>
   );
 }
+
+export default App;
